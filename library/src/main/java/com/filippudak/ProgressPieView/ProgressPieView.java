@@ -613,7 +613,7 @@ public class ProgressPieView extends View {
     }
 
     /**
-     * Sets the progress listner.
+     * Sets the progress listener.
      * @param listener progress listener
      *
      * @see com.filippudak.ProgressPieView.ProgressPieView.OnProgressListener
