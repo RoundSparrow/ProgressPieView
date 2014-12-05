@@ -175,8 +175,10 @@ public class ProgressPieView extends View {
         float centerY = mInnerRectF.centerY();
 
         // 0..360 references are to a full normalized circle.
+        // Draw the background circle
         canvas.drawArc(mInnerRectF, 0, 360, true, mBackgroundPaint);
 
+        // Draw the living moving Pie
         switch (mProgressFillType) {
             case FILL_TYPE_RADIAL:
                 float sweepAngle = 360 * mProgress / mMax;
@@ -199,6 +201,7 @@ public class ProgressPieView extends View {
                 throw new IllegalArgumentException("Invalid Progress Fill = " + mProgressFillType);
         }
 
+        // Draw text centered in the circle
         if (!TextUtils.isEmpty(mText) && mShowText) {
             if (!TextUtils.isEmpty(mTypeface)) {
                 // Try to load from cache, otherwise create and populate cache
