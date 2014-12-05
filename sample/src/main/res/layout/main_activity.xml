@@ -57,6 +57,60 @@
             ppv:ppvStrokeColor="@color/holo_green_light"
             ppv:ppvBackgroundColor="@color/holo_purple"
             ppv:ppvProgressColor="@color/holo_red_light"/>
+
+    </LinearLayout>
+
+<!-- The second row wont' fit on smaller screens, but it can quick-dirty serve some purposes:
+   1. Check behavior on different dimensions
+   2. Reveal the background to have some idea of the parameter behavior.
+Can be hidden by just hiding the entire layout
+-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:orientation="horizontal"
+        android:baselineAligned="false"
+        android:id="@+id/container2">
+
+        <com.filippudak.ProgressPieView.ProgressPieView
+            android:layout_margin="8dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:background="#E1BEE7"
+            android:id="@+id/progressPieViewLarger"/>
+
+        <com.filippudak.ProgressPieView.ProgressPieView
+            android:layout_margin="8dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:id="@+id/progressPieViewInvertedLarger"
+            android:text="CCW"
+            ppv:ppvInverted="true"
+            android:background="#E57373"
+            ppv:ppvCounterclockwise="true"/>
+
+        <com.filippudak.ProgressPieView.ProgressPieView
+            android:layout_margin="8dp"
+            android:layout_gravity="center"
+            android:id="@+id/progressPieViewXmlLarger"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:textColor="@color/holo_orange_dark"
+            android:textSize="18sp"
+            android:text="Xml"
+            android:background="#64B5F6"
+            ppv:ppvTypeface="fonts/Roboto/RobotoCondensed-Bold.ttf"
+            ppv:ppvProgressFillType="center"
+            ppv:ppvStrokeWidth="6dp"
+            ppv:ppvStrokeColor="@color/holo_green_light"
+            ppv:ppvBackgroundColor="@color/holo_purple"
+            ppv:ppvProgressColor="@color/holo_red_light"/>
+
     </LinearLayout>
 
 

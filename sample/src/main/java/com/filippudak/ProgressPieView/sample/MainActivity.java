@@ -21,6 +21,10 @@ public class MainActivity extends ActionBarActivity {
     private ProgressPieView mProgressPieViewInverted;
     private ProgressPieView mProgressPieViewXml;
     private ProgressPieView mProgressPieViewCode;
+    private ProgressPieView mProgressPieViewLarger;
+    private ProgressPieView mProgressPieViewInvertedLarger;
+    private ProgressPieView mProgressPieViewXmlLarger;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +79,36 @@ public class MainActivity extends ActionBarActivity {
         // XML version
         mProgressPieViewXml = (ProgressPieView) findViewById(R.id.progressPieViewXml);
 
-        // SeekBar 
+        // SECOND ROW: Optional larger ones
+        // clone of Default version
+        mProgressPieViewLarger = (ProgressPieView) findViewById(R.id.progressPieViewLarger);
+        mProgressPieViewLarger.setOnProgressListener(new ProgressPieView.OnProgressListener() {
+            @Override
+            public void onProgressChanged(int progress, int max) {
+                if (!mProgressPieViewLarger.isTextShowing()) {
+                    mProgressPieViewLarger.setShowText(true);
+                    mProgressPieViewLarger.setShowImage(false);
+                }
+            }
+
+            @Override
+            public void onProgressCompleted() {
+                if (!mProgressPieViewLarger.isImageShowing()) {
+                    mProgressPieViewLarger.setShowImage(true);
+                }
+                mProgressPieViewLarger.setShowText(false);
+                mProgressPieViewLarger.setImageResource(R.drawable.ic_action_accept);
+            }
+        });
+
+        // larger copy of: Inverted default version
+        mProgressPieViewInvertedLarger = (ProgressPieView) findViewById(R.id.progressPieViewInvertedLarger);
+
+        // larger copy of: XML version
+        mProgressPieViewXmlLarger = (ProgressPieView) findViewById(R.id.progressPieViewXmlLarger);
+
+
+        // Controlling SeekBar
         mSeekBar = (SeekBar) findViewById(R.id.seekbar);
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
@@ -85,6 +118,12 @@ public class MainActivity extends ActionBarActivity {
                 mProgressPieViewInverted.setProgress(i);
                 mProgressPieViewXml.setProgress(i);
                 mProgressPieViewCode.setProgress(i);
+
+                // Second row
+                mProgressPieViewLarger.setProgress(i);
+                mProgressPieViewLarger.setText(i + "%");
+                mProgressPieViewInvertedLarger.setProgress(i);
+                mProgressPieViewXmlLarger.setProgress(i);
             }
 
             @Override
@@ -98,6 +137,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -116,6 +156,14 @@ public class MainActivity extends ActionBarActivity {
             mProgressPieViewXml.animateProgressFill();
             mProgressPieViewCode.setProgress(0);
             mProgressPieViewCode.animateProgressFill();
+
+            // Second row
+            mProgressPieViewLarger.setProgress(0);
+            mProgressPieViewLarger.animateProgressFill();
+            mProgressPieViewInvertedLarger.setProgress(0);
+            mProgressPieViewInvertedLarger.animateProgressFill();
+            mProgressPieViewXmlLarger.setProgress(0);
+            mProgressPieViewXmlLarger.animateProgressFill();
         }
         return super.onOptionsItemSelected(item);
     }
