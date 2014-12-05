@@ -18,6 +18,7 @@ import android.util.DisplayMetrics;
 import android.support.v4.util.LruCache;
 import android.view.View;
 
+
 public class ProgressPieView extends View {
 
     public interface OnProgressListener {
@@ -61,7 +62,7 @@ public class ProgressPieView extends View {
     private boolean mShowText = true;
     private float mTextSize = DEFAULT_TEXT_SIZE;
     private String mText;
-    private String mTypeface;
+    private String mTypefaceSource;
     private boolean mShowImage = true;
     private Drawable mImage;
     private Rect mImageRect;
@@ -106,7 +107,7 @@ public class ProgressPieView extends View {
         mInverted = a.getBoolean(R.styleable.ProgressPieView_ppvInverted, mInverted);
         mCounterclockwise = a.getBoolean(R.styleable.ProgressPieView_ppvCounterclockwise, mCounterclockwise);
         mStrokeWidth = a.getDimension(R.styleable.ProgressPieView_ppvStrokeWidth, mStrokeWidth);
-        mTypeface = a.getString(R.styleable.ProgressPieView_ppvTypeface);
+        mTypefaceSource = a.getString(R.styleable.ProgressPieView_ppvTypeface);
         mTextSize = a.getDimension(R.styleable.ProgressPieView_android_textSize, mTextSize);
         mText = a.getString(R.styleable.ProgressPieView_android_text);
 
@@ -203,14 +204,14 @@ public class ProgressPieView extends View {
 
         // Draw text centered in the circle
         if (!TextUtils.isEmpty(mText) && mShowText) {
-            if (!TextUtils.isEmpty(mTypeface)) {
+            if (!TextUtils.isEmpty(mTypefaceSource)) {
                 // Try to load from cache, otherwise create and populate cache
-                Typeface typeface = sTypefaceCache.get(mTypeface);
+                Typeface typeface = sTypefaceCache.get(mTypefaceSource);
                 if (null == typeface && null != getResources()) {
                     AssetManager assets = getResources().getAssets();
                     if (null != assets) {
-                        typeface = Typeface.createFromAsset(assets, mTypeface);
-                        sTypefaceCache.put(mTypeface, typeface);
+                        typeface = Typeface.createFromAsset(assets, mTypefaceSource);
+                        sTypefaceCache.put(mTypefaceSource, typeface);
                     }
                 }
                 mTextPaint.setTypeface(typeface);
@@ -464,10 +465,10 @@ public class ProgressPieView extends View {
     }
 
     /**
-     * Gets the typeface of the text.
+     * Gets the typeface of the text. As String, uses "Source" to not clash with setTypeface method name in TextView class.
      */
-    public String getTypeface() {
-        return mTypeface;
+    public String getTypefaceSource() {
+        return mTypefaceSource;
     }
 
     /**
@@ -475,8 +476,8 @@ public class ProgressPieView extends View {
      *  - i.e. fonts/Roboto/Roboto-Regular.ttf
      * @param typeface that the text is displayed in
      */
-    public void setTypeface(String typeface) {
-        mTypeface = typeface;
+    public void setTypefaceSource(String typeface) {
+        mTypefaceSource = typeface;
         // Redraw the frame, will trigger onDraw method
         invalidate();
     }
