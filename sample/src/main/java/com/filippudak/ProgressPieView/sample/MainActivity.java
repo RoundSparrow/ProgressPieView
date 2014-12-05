@@ -49,6 +49,10 @@ public class MainActivity extends ActionBarActivity {
         mProgressPieViewCode.setProgressColor(getResources().getColor(R.color.holo_green_dark));
         mProgressPieViewCode.setStrokeColor(getResources().getColor(R.color.holo_blue_dark));
         mProgressPieViewCode.setTypeface("fonts/Roboto/Roboto-Italic.ttf");
+        // ToDo: the value 720 here ends up at 3-o'clock position of an analog clock. It's not clear to me why this is used in a sample application
+        //   as the word angle would imply 0..360? And is this not 90 degrees from top-dead-center?
+        //   opened issue: https://github.com/FilipPudak/ProgressPieView/issues/14
+        //   Does 720 produce same values as 360 in all use cases? or just 0?
         mProgressPieViewCode.setStartAngle(720);
         container.addView(mProgressPieViewCode);
 
@@ -80,7 +84,7 @@ public class MainActivity extends ActionBarActivity {
         mProgressPieViewXml = (ProgressPieView) findViewById(R.id.progressPieViewXml);
 
         // SECOND ROW: Optional larger ones
-        // clone of Default version
+        // larger copy of Default version
         mProgressPieViewLarger = (ProgressPieView) findViewById(R.id.progressPieViewLarger);
         mProgressPieViewLarger.setOnProgressListener(new ProgressPieView.OnProgressListener() {
             @Override

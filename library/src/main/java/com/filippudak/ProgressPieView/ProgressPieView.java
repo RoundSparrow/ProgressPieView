@@ -44,8 +44,10 @@ public class ProgressPieView extends View {
     private static final float DEFAULT_STROKE_WIDTH = 3f;
     private static final float DEFAULT_TEXT_SIZE = 14f;
     private static final int DEFAULT_VIEW_SIZE = 96;
+    private static final int TYPEFACE_CACHE_MAXIMUM_SIZE = 8;
 
-    private static LruCache<String, Typeface> sTypefaceCache = new LruCache<String, Typeface>(8);
+    // One single static cache shared by all concurrent instances
+    private static LruCache<String, Typeface> sTypefaceCache = new LruCache<String, Typeface>(TYPEFACE_CACHE_MAXIMUM_SIZE);
 
     private OnProgressListener mListener;
     private DisplayMetrics mDisplayMetrics;
@@ -74,6 +76,7 @@ public class ProgressPieView extends View {
     private AnimationHandler mAnimationHandler = new AnimationHandler();
 
     private int mViewSize;
+
 
     public ProgressPieView(Context context) {
         this(context, null);
@@ -157,18 +160,21 @@ public class ProgressPieView extends View {
         setMeasuredDimension(width, height);
     }
 
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         mInnerRectF.set(0, 0, mViewSize, mViewSize);
         mInnerRectF.offset((getWidth() - mViewSize) / 2, (getHeight() - mViewSize) / 2);
         if (mShowStroke) {
+            // ToDo: what's the value of this 2.5f being added for? Explain value... would you ever need to change it?
             final int halfBorder = (int) (mStrokePaint.getStrokeWidth() / 2f + 0.5f);
             mInnerRectF.inset(halfBorder, halfBorder);
         }
         float centerX = mInnerRectF.centerX();
         float centerY = mInnerRectF.centerY();
 
+        // 0..360 references are to a full normalized circle.
         canvas.drawArc(mInnerRectF, 0, 360, true, mBackgroundPaint);
 
         switch (mProgressFillType) {
@@ -195,6 +201,7 @@ public class ProgressPieView extends View {
 
         if (!TextUtils.isEmpty(mText) && mShowText) {
             if (!TextUtils.isEmpty(mTypeface)) {
+                // Try to load from cache, otherwise create and populate cache
                 Typeface typeface = sTypefaceCache.get(mTypeface);
                 if (null == typeface && null != getResources()) {
                     AssetManager assets = getResources().getAssets();
@@ -221,8 +228,8 @@ public class ProgressPieView extends View {
         if (mShowStroke) {
             canvas.drawOval(mInnerRectF, mStrokePaint);
         }
-
     }
+
 
     /**
      * Gets the maximum progress value.
@@ -240,6 +247,7 @@ public class ProgressPieView extends View {
                     String.format("Max (%d) must be > 0 and >= %d", max, mProgress));
         }
         mMax = max;
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 	
@@ -264,6 +272,7 @@ public class ProgressPieView extends View {
         mAnimationHandler.removeMessages(0);
         mAnimationHandler.setAnimateTo(mMax);
         mAnimationHandler.sendEmptyMessage(0);
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -279,6 +288,7 @@ public class ProgressPieView extends View {
         }
         mAnimationHandler.setAnimateTo(animateTo);
         mAnimationHandler.sendEmptyMessage(0);
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -288,6 +298,7 @@ public class ProgressPieView extends View {
     public void stopAnimating() {
         mAnimationHandler.removeMessages(0);
         mAnimationHandler.setAnimateTo(mProgress);
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -314,6 +325,7 @@ public class ProgressPieView extends View {
                 mListener.onProgressChanged(mProgress, mMax);
             }
         }
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -375,6 +387,7 @@ public class ProgressPieView extends View {
      */
     public void setProgressColor(int color) {
         mProgressPaint.setColor(color);
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -391,6 +404,7 @@ public class ProgressPieView extends View {
      */
     public void setBackgroundColor(int color) {
         mBackgroundPaint.setColor(color);
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -407,6 +421,7 @@ public class ProgressPieView extends View {
      */
     public void setTextColor(int color) {
         mTextPaint.setColor(color);
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -424,6 +439,7 @@ public class ProgressPieView extends View {
     public void setTextSize(int sizeSp) {
         mTextSize = sizeSp * mDisplayMetrics.scaledDensity;
         mTextPaint.setTextSize(mTextSize);
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -440,6 +456,7 @@ public class ProgressPieView extends View {
      */
     public void setText(String text) {
         mText = text;
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -457,6 +474,7 @@ public class ProgressPieView extends View {
      */
     public void setTypeface(String typeface) {
         mTypeface = typeface;
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -473,6 +491,7 @@ public class ProgressPieView extends View {
      */
     public void setShowText(boolean showText) {
         mShowText = showText;
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -489,6 +508,7 @@ public class ProgressPieView extends View {
      */
     public void setStrokeColor(int color) {
         mStrokePaint.setColor(color);
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -506,6 +526,7 @@ public class ProgressPieView extends View {
     public void setStrokeWidth(int widthDp) {
         mStrokeWidth = widthDp * mDisplayMetrics.density;
         mStrokePaint.setStrokeWidth(mStrokeWidth);
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -522,6 +543,7 @@ public class ProgressPieView extends View {
      */
     public void setShowStroke(boolean showStroke) {
         mShowStroke = showStroke;
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -538,6 +560,7 @@ public class ProgressPieView extends View {
      */
     public void setImageDrawable(Drawable image) {
         mImage = image;
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -548,6 +571,7 @@ public class ProgressPieView extends View {
     public void setImageResource(int resId) {
         if (null != getResources()) {
             mImage = getResources().getDrawable(resId);
+            // Redraw the frame, will trigger onDraw method
             invalidate();
         }
     }
@@ -565,6 +589,7 @@ public class ProgressPieView extends View {
      */
     public void setShowImage(boolean showImage) {
         mShowImage = showImage;
+        // Redraw the frame, will trigger onDraw method
         invalidate();
     }
 
@@ -593,6 +618,7 @@ public class ProgressPieView extends View {
         mListener = listener;
     }
 
+
     /**
      * Handler used to perform the fill animation.
      */
@@ -617,5 +643,4 @@ public class ProgressPieView extends View {
             }
         }
     }
-
 }

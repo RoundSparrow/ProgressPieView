@@ -62,7 +62,8 @@
 
 <!-- The second row wont' fit on smaller screens, but it can quick-dirty serve some purposes:
    1. Check behavior on different dimensions
-   2. Reveal the background to have some idea of the parameter behavior.
+   2. Check behavior on different start angle
+   3. Reveal the background to have some observable demonstration of the margin/padding parameter behavior.
 Can be hidden by just hiding the entire layout
 -->
     <LinearLayout
@@ -78,6 +79,7 @@ Can be hidden by just hiding the entire layout
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:layout_gravity="center"
+            ppv:ppvStartAngle="45"
             android:background="#E1BEE7"
             android:id="@+id/progressPieViewLarger"/>
 
@@ -90,6 +92,7 @@ Can be hidden by just hiding the entire layout
             android:id="@+id/progressPieViewInvertedLarger"
             android:text="CCW"
             ppv:ppvInverted="true"
+            ppv:ppvStartAngle="45"
             android:background="#E57373"
             ppv:ppvCounterclockwise="true"/>
 
