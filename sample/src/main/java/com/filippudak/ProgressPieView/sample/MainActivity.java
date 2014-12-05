@@ -113,6 +113,7 @@ public class MainActivity extends ActionBarActivity {
 
 
         // Controlling SeekBar
+        // NOTE: the "0%" text will not be set on initial page load... it is just empty. Inconsistent in the sense that sliding away from 0 back to 0 does show "0%".
         mSeekBar = (SeekBar) findViewById(R.id.seekbar);
         mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
